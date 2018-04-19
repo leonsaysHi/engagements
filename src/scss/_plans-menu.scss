@@ -1,0 +1,62 @@
+.plans-menu {
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 1em;
+  &.-enabled {
+    padding-right: 4rem;
+    .sliders {
+      display: flex;
+    }
+  }
+
+  > div {
+    overflow: hidden;
+  }
+  menu {
+    margin: 0;
+    padding: 0;
+  }
+  .sliders {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 4rem;
+    align-items: stretch;
+    > * {
+      flex: 1 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      svg {
+        fill: $text-color-weak;
+      }
+    }
+  }
+  .items {
+    float: left;
+    white-space: nowrap;
+    transition: transform 0.2s;
+    display: flex;
+    > * {
+      display: flex;
+      flex-direction: column;
+      padding: 0.75rem 0.5rem 0.25rem;
+      padding-right: 4rem;
+      white-space: nowrap;
+      background-color: map-get($theme-colors, "grey-lighter");
+      border-bottom: solid 5px map-get($theme-colors, "grey-light");
+      color: map-get($theme-colors, "grey");
+      text-decoration: none;
+      &:not(:last-child) {
+        margin-right: 2px;
+      }
+      &.active {
+        border-bottom-color: map-get($theme-colors, "primary");
+        color: map-get($theme-colors, "dark");
+      }
+    }
+  }
+}

@@ -3,6 +3,10 @@
 import Vue from "vue";
 import App from "./App";
 
+import { Drag, Drop } from "vue-drag-drop";
+
+Vue.component("drag", Drag);
+Vue.component("drop", Drop);
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */

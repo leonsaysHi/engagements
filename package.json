@@ -14,8 +14,12 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "bulma": "0.7.1",
     "jquery": "3.3.1",
-    "vue": "^2.5.2"
+    "moment": "2.22.1",
+    "vue": "^2.5.2",
+    "vue-drag-drop": "0.2.4",
+    "vue-slick": "1.1.12"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -59,7 +63,6 @@
     "shelljs": "^0.7.6",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
-    "vue-drag-drop": "^0.2.4",
     "vue-jest": "^1.0.2",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
