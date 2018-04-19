@@ -156,7 +156,7 @@ class DataManager {
   //   engagementPlansList,
   //   regionsList
   // }
-  get state() {
+  /*get state() {
     return {
       // for datas display
       professionalsList: this.professionalsList,
@@ -165,7 +165,7 @@ class DataManager {
       regionsList: this.regionsList,
       professionalsFilters: this.professionalsFilters
     };
-  }
+  }*/
 
   // Public methods
   updateAttendee(pro, event) {

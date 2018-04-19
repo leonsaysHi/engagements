@@ -39,6 +39,7 @@ export default {
   },
   data() {
     return {
+      refresh: 0,
       // filters
       filters: {
         regionsList: null,
@@ -53,19 +54,17 @@ export default {
   beforeMount() {
     this.DM = new DataManager();
     this.DM.importDatas(WindowDatas);
-    this.filters.selectedEngagementPlan = this.DM.state.engagementPlansList[0].id;
-    this.filters.regionsList = this.DM.state.regionsList;
+    this.filters.selectedEngagementPlan = this.DM.engagementPlansList[0].id;
+    this.filters.regionsList = this.DM.regionsList;
   },
   computed: {
     datasSources() {
       const selectedPlanId = this.filters.selectedEngagementPlan,
         selectedPlan = selectedPlanId
-          ? this.DM.state.engagementPlansList.find(
-              item => item.id === selectedPlanId
-            )
+          ? this.DM.engagementPlansList.find(item => item.id === selectedPlanId)
           : null,
         eventsList = selectedPlan ? selectedPlan.eventsList : [],
-        professionalsList = this.DM.state.professionalsList.filter(item => {
+        professionalsList = this.DM.professionalsList.filter(item => {
           let matchRegion =
               !this.filters.selectedRegion ||
               this.filters.selectedRegion === item.region,
@@ -75,11 +74,12 @@ export default {
           return matchRegion && matchCountry;
         });
       return {
+        refresh: this.refresh,
         professionalsList,
-        engagementPlansList: this.DM.state.engagementPlansList,
+        engagementPlansList: this.DM.engagementPlansList,
         eventsList,
         // Filters
-        professionalsFilters: this.DM.state.professionalsFilters
+        professionalsFilters: this.DM.professionalsFilters
       };
     }
   },
@@ -93,6 +93,7 @@ export default {
 
       const argObj = this.DM.updateAttendee(pro, event);
       console.log("Toggle attendee", argObj);
+      this.refresh++;
     },
     onChangeProfesionalsFilter(obj) {
       // $(this.$el).trigger($.Event('filterProfesionalsList'), obj)
