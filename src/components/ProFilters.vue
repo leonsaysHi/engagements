@@ -1,28 +1,28 @@
 <template>
   <div class="columns is-mobile">
 
-    <div class="column" v-if="filters.regionsList">
+    <div class="column is-half" v-if="filters.regionsList">
       <div class="field">
         <label class="label" for="select-region">World region</label>
         <div class="control">
           <div class="select">
             <select v-model="selectedRegion" v-bind:disabled="filters.regionsList.length === 0" id="select-region">
               <option value="">Please select</option>
-              <option v-for="item in filters.regionsList" :key="item.value" :value="item" v-html="item.label"></option>
+              <option v-for="item in filters.regionsList" :key="item.value" :value="item">{{ item.label }}</option>
             </select>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="column" v-if="filters.regionsList">
+    <div class="column is-half" v-if="filters.regionsList">
       <div class="field">
         <label class="label" for="select-country">Primary country</label>
         <div class="control">
           <div class="select">
             <select v-model="selectedCountry" :disabled="!selectedRegion" id="select-country">
               <option value="">Please select</option>
-              <option v-for="item in countriesList" :key="item.value" :value="item" v-html="item"></option>
+              <option v-for="item in countriesList" :key="item.value" :value="item">{{ item }}</option>
             </select>
           </div>
         </div>

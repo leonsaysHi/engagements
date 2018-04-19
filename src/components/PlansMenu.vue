@@ -1,16 +1,20 @@
 <template>
   <div class="plans-menu slds-m-bottom_large" v-bind:class="{ '-enabled': enableSlide }">
     <div>
-      <menu class="items" ref="slides">
-        <a
-          v-for="item in items"
-          :key="item.id"
-          v-on:click="selectItem(item.id)"
-          :class="{ active: item.id === filters.selectedEngagementPlan }">
-          <div class="slds-text-heading_medium slds-m-bottom_xx-small"><strong v-html="item.name"></strong></div>
-          <div class="slds-text-body_small slds-text-color_weak" v-html="getDateToString(item.startDate, item.endDate)"></div>
-        </a>
-      </menu>
+
+      <div class="tabs" ref="slides">
+        <ul>
+          <li 
+            :class="{ 'is-active': item.id === filters.selectedEngagementPlan }"
+            v-for="item in items" 
+            :key="item.id"
+          ><a v-on:click="selectItem(item.id)">
+            <div><strong>{{ item.name }}</strong></div>
+            <div><small>{{ getDateToString(item.startDate, item.endDate) }}</small></div>
+          </a></li>
+        </ul>
+      </div>
+      
     </div>
     <menu class="sliders">
       <a v-on:click="slide(1)"><svg class="slds-icon slds-icon-text-default" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use></svg></a>
