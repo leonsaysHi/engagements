@@ -95,9 +95,8 @@ export default {
         return;
       }
       // update source:
-
-      const argObj = this.DM.updateAttendee(pro, event);
-      console.log("Toggle attendee", argObj);
+      /*const argObj = */
+      this.DM.updateAttendee(pro, event);
     },
     onChangeProfesionalsFilter(obj) {
       // $(this.$el).trigger($.Event('filterProfesionalsList'), obj)

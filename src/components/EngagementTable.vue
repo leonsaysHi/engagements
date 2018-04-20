@@ -2,11 +2,17 @@
   <div class="engagements-table box">
 
     <div class="header-wrapper row">
-      <div class="pro cell">
-        Professionals
+      <div class="pro cell" @click="toggleOrder('rows')">
+        <div class="columns is-mobile">
+          <div class="column is-four-fifths">Professionals</div>
+          <div class="column">
+            <span v-if="order.by === 'rows' && order.way > 0">&uarr;</span>
+            <span v-if="order.by === 'rows' && order.way < 0">&darr;</span>
+          </div>
+        </div>
       </div>
       <div class="col-headers row -scroll-h" ref="hscroll">
-        <div v-for="ev in sources.eventsList" v-bind:key="ev.id" class="cell">
+        <div v-for="ev in cols" v-bind:key="ev.id" class="cell">
           {{ ev.name }}
         </div>
       </div>
@@ -15,7 +21,7 @@
     <div class="body-wrapper row">
       <div class="pro body-fixed">
         <div class="-scroll-v" ref="vscroll">
-          <div v-for="pr in sources.professionalsList" v-bind:key="pr.id" class="cell">
+          <div v-for="pr in rows" v-bind:key="pr.id" class="cell">
             <drag class="dragpro" 
               v-on:dragstart="currentlyDraggedPro = pr.id" 
               v-on:dragend="onDragend"
@@ -25,8 +31,8 @@
       </div>
       <div class="body-scrolled" ref="body">
         <div class="body">
-          <div v-for="pr in sources.professionalsList" v-bind:key="pr.id" class="row">
-            <div v-for="ev in sources.eventsList" v-bind:key="ev.id" class="cell">
+          <div v-for="pr in rows" v-bind:key="pr.id" class="row">
+            <div v-for="ev in cols" v-bind:key="ev.id" class="cell">
               <div @click="onUpdateAttendee(pr, ev)">
                 <div class="droppro" :class="{'-attend': isAttending(pr, ev), '-disabled': isDisabledSpot(pr), '-isover': isOveredSpot(pr, ev) }">
                   <drop 
@@ -53,11 +59,35 @@ export default {
   data() {
     return {
       currentlyDraggedPro: null,
-      currentlyOverSpot: null
+      currentlyOverSpot: null,
+      order: { by: 'rows', way: 0 }
     };
   },
   props: ["sources", "onUpdateAttendee"],
+  computed: {
+    cols () {
+      return this.sources.eventsList
+    },
+    rows () {
+      if (this.order.by === 'rows' && this.order.way !== 0) {
+        return this.sources.professionalsList.slice().sort( (a, b) => { 
+          if (a.firstName < b.firstName) return this.order.way * -1;
+          if (a.firstName > b.firstName) return this.order.way * 1;
+          return 0;
+        })
+      }
+      else {
+        return this.sources.professionalsList.slice()
+      }
+    }
+  },
   methods: {
+    toggleOrder (by) {
+      this.order.by = by
+      const ways = [0, 1, -1]
+      let idx = ways.findIndex( w => w===this.order.way ) + 1
+      this.order.way = idx === ways.length ? ways[0] : ways[idx]
+    },
     isAttending(pro, event) {
       return event.professionalsList.findIndex(p => p.id === pro.id) > -1;
     },
