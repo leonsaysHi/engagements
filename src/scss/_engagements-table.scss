@@ -3,6 +3,8 @@ $row-header-w: 300px;
 
 .engagements-table {
   position: relative;
+  overflow: hidden;
+  padding: 0;
 
   .row {
     display: flex;
@@ -30,6 +32,9 @@ $row-header-w: 300px;
   .header-wrapper {
     .cell {
       background-color: #dedede;
+      &:first-child {
+        border-top-left-radius: $radius-large;
+      }
     }
   }
   .body-wrapper {

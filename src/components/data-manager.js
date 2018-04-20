@@ -88,7 +88,7 @@ class DataManager {
     try {
       try {
         if (attendeesList) {
-          this.attendeesList = attendeesList;
+          this.updateList(this.attendeesList, attendeesList, { reset: true });
         }
       } catch (err) {
         console.log("DataManager attendeesList error:", err);
@@ -97,9 +97,8 @@ class DataManager {
       try {
         if (professionalsList) {
           // update professionals list
-          this.professionalsList = this.parseProfessionalsList(
-            professionalsList
-          );
+          const _newPros = this.parseProfessionalsList(professionalsList);
+          this.updateList(this.professionalsList, _newPros, { reset: true });
         }
       } catch (err) {
         console.log("DataManager professionalsList error:", err);
@@ -108,12 +107,16 @@ class DataManager {
       try {
         if (eventsList) {
           // update plans/events
-          this.eventsList = this.parseEventsList(eventsList);
+          const _newEvents = this.parseEventsList(eventsList);
+          this.updateList(this.eventsList, _newEvents, { unicId: "id" });
           if (engagementPlansList) {
-            this.engagementPlansList = this.parseEngagementPlansList(
+            const _newEngagements = this.parseEngagementPlansList(
               engagementPlansList,
               this.eventsList
             );
+            this.updateList(this.engagementPlansList, _newEngagements, {
+              unicId: "id"
+            });
           }
         }
       } catch (err) {
@@ -123,7 +126,8 @@ class DataManager {
       try {
         if (professionalsList) {
           // update region list based on new professionals list
-          this.regionsList = this.getRegionsList(professionalsList);
+          const _newRegions = this.getRegionsList(professionalsList);
+          this.updateList(this.regionsList, _newRegions, { reset: true });
           if (this.eventsList && this.attendeesList) {
             // update events' attending professionals list
             this.updateProfessionalsListForEvents(
@@ -139,9 +143,10 @@ class DataManager {
 
       try {
         if (filtersOptions) {
-          this.professionalsFilters = this.parseprofessionalsFilters(
-            filtersOptions
-          );
+          const _newFilters = this.parseprofessionalsFilters(filtersOptions);
+          this.updateList(this.professionalsFilters, _newFilters, {
+            reset: true
+          });
         }
       } catch (err) {
         console.log("DataManager filtersOptions error:", err);
@@ -185,6 +190,25 @@ class DataManager {
     };
   }
 
+  //
+  updateList(list, source, args) {
+    args = args || {}
+    if (args.reset) {
+      while (list.length) {
+        list.pop();
+      }
+    }
+    source.every(item => {
+      if (
+        !args.unicId ||
+        list.findIndex(_item => _item[args.unicId] === item[args.unicId]) === -1
+      ) {
+        list.push(item);
+      }
+      return true;
+    });
+  }
+
   // Private methods
   parseProfessionalsList(professionalsList) {
     return professionalsList.map(item => {
@@ -209,7 +233,8 @@ class DataManager {
         name: item.name,
         startDate: moment(item.startDate, this._dateformat),
         endDate: moment(item.endDate, this._dateformat),
-        color: item.color
+        color: item.color,
+        professionalsList: []
       };
       return o;
     });
@@ -259,7 +284,7 @@ class DataManager {
     attendeesList
   ) {
     eventsList.every(item => {
-      item.professionalsList = attendeesList.reduce(
+      const _newProfessionals = attendeesList.reduce(
         (_professionalsList, _item) => {
           if (item.id === _item.eventId) {
             const pro = professionalsList.find(
@@ -273,6 +298,7 @@ class DataManager {
         },
         []
       );
+      this.updateList(item.professionalsList, _newProfessionals, { unicId: 'id' })
       return true;
     });
   }

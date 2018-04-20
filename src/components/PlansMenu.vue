@@ -1,5 +1,5 @@
 <template>
-  <div class="plans-menu slds-m-bottom_large" v-bind:class="{ '-enabled': enableSlide }">
+  <div class="plans-menu" v-bind:class="{ '-enabled': enableSlide }">
     <div>
 
       <div class="tabs" ref="slides">
@@ -17,8 +17,8 @@
       
     </div>
     <menu class="sliders">
-      <a v-on:click="slide(1)"><svg class="slds-icon slds-icon-text-default" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use></svg></a>
-      <a v-on:click="slide(-1)"><svg class="slds-icon slds-icon-text-default" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#chevronright"></use></svg></a>
+      <a v-on:click="slide(1)">&lt;</a>
+      <a v-on:click="slide(-1)">&gt;</a>
     </menu>
   </div>
 </template>

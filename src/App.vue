@@ -1,22 +1,28 @@
 <template>
   <div id="app">
 
-  <!-- Engagement plans menu -->
-  <PlansMenu v-if="datasSources.engagementPlansList && datasSources.engagementPlansList.length > 1"
-    :filters="filters"
-    :items="datasSources.engagementPlansList"
-  />
-  
-  <!-- Filters -->
-  <ProFilters
-    :filters="filters"
-    :sources="datasSources"
-  />
+    <!-- Engagement plans menu -->
+    <PlansMenu v-if="datasSources.engagementPlansList && datasSources.engagementPlansList.length > 1"
+      :filters="filters"
+      :items="datasSources.engagementPlansList"
+    />
 
-  <EngagementTable 
-    :sources="datasSources" 
-    :on-update-attendee="onUpdateAttendee"
-  />
+    <section class="section">
+      <div class="container">
+      
+        <!-- Filters -->
+        <ProFilters
+          :filters="filters"
+          :sources="datasSources"
+        />
+
+        <EngagementTable 
+          :sources="datasSources" 
+          :on-update-attendee="onUpdateAttendee"
+        />
+
+      </div>
+    </section>
 
   </div>
 </template>
@@ -39,7 +45,6 @@ export default {
   },
   data() {
     return {
-      refresh: 0,
       // filters
       filters: {
         regionsList: null,
@@ -93,7 +98,6 @@ export default {
 
       const argObj = this.DM.updateAttendee(pro, event);
       console.log("Toggle attendee", argObj);
-      this.refresh++;
     },
     onChangeProfesionalsFilter(obj) {
       // $(this.$el).trigger($.Event('filterProfesionalsList'), obj)

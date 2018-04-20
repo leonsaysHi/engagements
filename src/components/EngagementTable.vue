@@ -1,5 +1,5 @@
 <template>
-  <div class="engagements-table">
+  <div class="engagements-table box">
 
     <div class="header-wrapper row">
       <div class="pro cell">
