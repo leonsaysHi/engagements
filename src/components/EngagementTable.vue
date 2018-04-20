@@ -1,6 +1,6 @@
 <template>
   <div class="engagements-table box">
-
+    <!-- header -->
     <div class="header-wrapper row">
       <div class="pro cell" @click="toggleOrder('rows')">
         <div class="columns is-mobile">
@@ -12,12 +12,18 @@
         </div>
       </div>
       <div class="col-headers row -scroll-h" ref="hscroll">
-        <div v-for="ev in cols" v-bind:key="ev.id" class="cell">
-          {{ ev.name }}
+        <div v-for="ev in cols" v-bind:key="ev.id" @click="toggleOrder('cols', ev.id)" class="cell">
+          <div class="columns is-mobile">
+            <div class="column is-four-fifths">{{ ev.name }}</div>
+            <div class="column">
+              <span v-if="order.by === 'cols' && order.id === ev.id && order.way > 0">&uarr;</span>
+              <span v-if="order.by === 'cols' && order.id === ev.id && order.way < 0">&darr;</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
+    <!-- body -->
     <div class="body-wrapper row">
       <div class="pro body-fixed">
         <div class="-scroll-v" ref="vscroll">
@@ -60,7 +66,7 @@ export default {
     return {
       currentlyDraggedPro: null,
       currentlyOverSpot: null,
-      order: { by: 'rows', way: 0 }
+      order: { by: 'rows', id: null, way: 0 }
     };
   },
   props: ["sources", "onUpdateAttendee"],
@@ -69,12 +75,31 @@ export default {
       return this.sources.eventsList
     },
     rows () {
-      if (this.order.by === 'rows' && this.order.way !== 0) {
-        return this.sources.professionalsList.slice().sort( (a, b) => { 
-          if (a.firstName < b.firstName) return this.order.way * -1;
-          if (a.firstName > b.firstName) return this.order.way * 1;
+      const sortByName = (list, way) => {
+        way = way || 0
+        return list.sort( (a, b) => { 
+          if (a.firstName < b.firstName) return way * -1;
+          if (a.firstName > b.firstName) return way * 1;
           return 0;
         })
+      }
+      if (this.order.by === 'rows' && this.order.way !== 0) {
+        return sortByName(this.sources.professionalsList.slice(), this.order.way)
+      }
+      else if (this.order.by === 'cols' && this.order.way !== 0) {
+        const evAttendees = this.sources.eventsList.find( ev => ev.id === this.order.id ).professionalsList
+        const { attendingList, notAttendingList } = this.sources.professionalsList.reduce( (accu, p) => {
+            if (evAttendees.findIndex( _p => p.id === _p.id ) === -1) {
+              accu.notAttendingList.push(p)
+            }
+            else {
+              accu.attendingList.push(p)
+            }
+            return accu
+          },
+          { attendingList: [], notAttendingList: [] }
+        )
+        return this.order.way === 1 ? [...sortByName(attendingList), ...sortByName(notAttendingList)] : [...sortByName(notAttendingList),...sortByName(attendingList)]
       }
       else {
         return this.sources.professionalsList.slice()
@@ -82,11 +107,17 @@ export default {
     }
   },
   methods: {
-    toggleOrder (by) {
-      this.order.by = by
-      const ways = [0, 1, -1]
-      let idx = ways.findIndex( w => w===this.order.way ) + 1
-      this.order.way = idx === ways.length ? ways[0] : ways[idx]
+    toggleOrder (by, id) {
+      if (this.order.by === by && (!id || this.order.id === id)) {
+        const ways = [0, 1, -1]
+        let idx = ways.findIndex( w => w===this.order.way ) + 1
+        this.order.way = idx === ways.length ? ways[0] : ways[idx]
+      }
+      else {
+        this.order.by = by
+        this.order.id = id || null
+        this.order.way = 1
+      }
     },
     isAttending(pro, event) {
       return event.professionalsList.findIndex(p => p.id === pro.id) > -1;
